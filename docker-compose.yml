@@ -1,9 +1,9 @@
-x-env: &env
+x-env: &env # &env = bookmark the value env_file: .env
   env_file: .env
 
 services:
   flight:
-    <<: *env
+    <<: *env # <<: *env = paste that bookmark into each service
     build: .
     command: uvicorn agents.flight_agent.__main__:app --host 0.0.0.0 --port 8001
     ports:
