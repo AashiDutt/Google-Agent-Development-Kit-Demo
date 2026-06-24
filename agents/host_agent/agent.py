@@ -6,7 +6,7 @@ from google.genai import types
 
 host_agent = Agent(
     name="host_agent",
-    model=LiteLlm("openai/gpt-4o"),
+    model=LiteLlm("deepseek/deepseek-chat"),
     description="Coordinates travel planning by calling flight, stay, and activity agents.",
     instruction="You are the host agent responsible for orchestrating trip planning tasks. "
                 "You call external agents to gather flights, stays, and activities, then return a final result."
@@ -24,7 +24,7 @@ SESSION_ID = "session_host"
 
 async def execute(request):
     # Ensure session exists
-    session_service.create_session(
+    await session_service.create_session(
         app_name="host_app",
         user_id=USER_ID,
         session_id=SESSION_ID

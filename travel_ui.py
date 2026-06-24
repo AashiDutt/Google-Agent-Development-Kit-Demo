@@ -1,5 +1,8 @@
+import os
 import streamlit as st
 import requests
+
+HOST_URL = os.getenv("HOST_URL", "http://localhost:8000/run")
 
 st.set_page_config(page_title="ADK-Powered Travel Planner", page_icon="✈️")
 
@@ -24,15 +27,19 @@ if st.button("Plan My Trip ✨"):
             "end_date": str(end_date),
             "budget": budget
         }
-        response = requests.post("http://localhost:8000/run", json=payload)
-
-        if response.ok:
-            data = response.json()
-            st.subheader("✈️ Flights")
-            st.markdown(data["flights"])
-            st.subheader("🏨 Stays")
-            st.markdown(data["stay"])
-            st.subheader("🗺️ Activities")
-            st.markdown(data["activities"])
-        else:
-            st.error("Failed to fetch travel plan. Please try again.")
+        try:
+            response = requests.post(HOST_URL, json=payload, timeout=120)
+            if response.ok:
+                data = response.json()
+                st.subheader("✈️ Flights")
+                st.markdown(data["flights"])
+                st.subheader("🏨 Stays")
+                st.markdown(data["stay"])
+                st.subheader("🗺️ Activities")
+                st.markdown(data["activities"])
+            else:
+                st.error(f"Failed ({response.status_code}): {response.text[:500]}")
+        except requests.exceptions.ConnectionError:
+            st.error(f"Cannot reach host agent at {HOST_URL}. Start the agents first.")
+        except Exception as e:
+            st.error(f"Error: {e}")
