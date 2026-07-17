@@ -6,7 +6,7 @@ from google.genai import types
 
 stay_agent = Agent(
     name="stay_agent",
-    model=LiteLlm("openai/gpt-4o"),
+    model=LiteLlm("deepseek/deepseek-chat"),
     description="Suggests hotel or stay options for a destination.",
     instruction=(
         "Given a destination, travel dates, and budget, suggest 2-3 hotel or stay options. "
@@ -25,7 +25,7 @@ USER_ID = "user_stay"
 SESSION_ID = "session_stay"
 
 async def execute(request):
-    session_service.create_session(
+    await session_service.create_session(
         app_name="stay_app",
         user_id=USER_ID,
         session_id=SESSION_ID

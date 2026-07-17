@@ -1,8 +1,9 @@
+import os
 from common.a2a_client import call_agent
 
-FLIGHT_URL = "http://localhost:8001/run"
-STAY_URL = "http://localhost:8002/run"
-ACTIVITIES_URL = "http://localhost:8003/run"
+FLIGHT_URL = os.getenv("FLIGHT_URL", "http://localhost:8001/run")
+STAY_URL = os.getenv("STAY_URL", "http://localhost:8002/run")
+ACTIVITIES_URL = os.getenv("ACTIVITIES_URL", "http://localhost:8003/run")
 
 async def run(payload):
     # 👀 Print what the host agent is sending

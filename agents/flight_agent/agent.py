@@ -6,7 +6,7 @@ from google.genai import types
 
 flight_agent = Agent(
     name="flight_agent",
-    model=LiteLlm("openai/gpt-4o"),
+    model=LiteLlm("deepseek/deepseek-chat"),
     description="Suggests flight options for a destination.",
     instruction=(
         "Given a destination, travel dates, and budget, suggest 1-2 realistic flight options. "
@@ -26,7 +26,7 @@ SESSION_ID = "session_001"
 
 async def execute(request):
     # 🔧 Ensure session is created before running the agent
-    session_service.create_session(
+    await session_service.create_session(
         app_name="flight_app",
         user_id=USER_ID,
         session_id=SESSION_ID

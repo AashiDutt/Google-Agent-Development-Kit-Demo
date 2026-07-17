@@ -1,0 +1,54 @@
+x-env: &env # &env = bookmark the value env_file: .env
+  env_file: .env
+
+services:
+  flight:
+    <<: *env # <<: *env = paste that bookmark into each service
+    build: .
+    command: uvicorn agents.flight_agent.__main__:app --host 0.0.0.0 --port 8001
+    ports:
+      - "8001:8001"
+
+  stay:
+    <<: *env
+    build: .
+    command: uvicorn agents.stay_agent.__main__:app --host 0.0.0.0 --port 8002
+    ports:
+      - "8002:8002"
+
+  activities:
+    <<: *env
+    build: .
+    command: uvicorn agents.activities_agent.__main__:app --host 0.0.0.0 --port 8003
+    ports:
+      - "8003:8003"
+
+  host:
+    <<: *env
+    build: .
+    command: uvicorn agents.host_agent.__main__:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      - FLIGHT_URL=http://flight:8001/run
+      - STAY_URL=http://stay:8002/run
+      - ACTIVITIES_URL=http://activities:8003/run
+    depends_on:
+      flight:
+        condition: service_started
+      stay:
+        condition: service_started
+      activities:
+        condition: service_started
+
+  streamlit-ui:
+    <<: *env
+    build: .
+    command: streamlit run travel_ui.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      - HOST_URL=http://host:8000/run
+    depends_on:
+      host:
+        condition: service_started

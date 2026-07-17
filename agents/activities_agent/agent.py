@@ -7,7 +7,7 @@ import json
 
 activities_agent = Agent(
     name="activities_agent",
-    model=LiteLlm("openai/gpt-4o"),
+    model=LiteLlm("deepseek/deepseek-chat"),
     description="Suggests interesting activities for the user at a destination.",
     instruction=(
         "Given a destination, dates, and budget, suggest 2-3 engaging tourist or cultural activities. "
@@ -27,7 +27,7 @@ USER_ID = "user_activities"
 SESSION_ID = "session_activities"
 
 async def execute(request):
-    session_service.create_session(
+    await session_service.create_session(
         app_name="activities_app",
         user_id=USER_ID,
         session_id=SESSION_ID
